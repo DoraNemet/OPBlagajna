@@ -280,11 +280,6 @@ namespace Blagajna
             selectedTB.Text = "";
             primljenoTB.Text = "";
             ukupnoLabel.Text = "0";
-        }
-
-
-
-
-        
+        }       
 }
 }

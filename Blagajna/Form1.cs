@@ -19,7 +19,9 @@ namespace Blagajna
 {
     public partial class Form1 : Form
     {
-        private const string MY_CONNECTION_STRING = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\Erpa\Documents\Visual Studio 2017\Projects\Blagajna\Blagajna\blagajna.MDB";
+        private static String databasePath = System.IO.Path.GetDirectoryName(Application.ExecutablePath).Replace("\\Blagajna\\bin\\Debug", "");
+
+        private readonly string MY_CONNECTION_STRING = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+ databasePath + "\\Blagajna\\blagajna.MDB";
 
         ScriptEngine m_pyEngine = null;
         ScriptScope m_pyScope = null;
@@ -177,14 +179,18 @@ namespace Blagajna
             double cijenaSPorezom;
             double zaPlatiti = 0;
 
-            ScriptSource ss = m_pyEngine.CreateScriptSourceFromFile(@"C:\Users\Erpa\documents\visual studio 2017\Projects\Blagajna\Calculations\Calculations.py");
+            String pythonPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            pythonPath = pythonPath.Replace("\\Blagajna\\bin\\Debug", "");
+            ScriptSource ss = m_pyEngine.CreateScriptSourceFromFile(pythonPath + "\\Calculations\\Calculations.py");
             ss.Execute(m_pyScope);
 
             Func<double, double, double> IzracunCijeneSPorezom = m_pyScope.GetVariable<Func<double, double, double>>("IzracunCijeneSPorezom");
             cijenaSPorezom = IzracunCijeneSPorezom(cijena, razinaPoreza);
-
+            cijenaSPorezom = Math.Round(cijenaSPorezom, 2);
+      
             Func<double, double, double> IzracunKonacneCijeneStavke = m_pyScope.GetVariable<Func<double, double, double>>("IzracunKonacneCijeneStavke");
             zaPlatiti = IzracunKonacneCijeneStavke(cijenaSPorezom, kupljenaKolicina);
+            zaPlatiti = Math.Round(zaPlatiti, 2);
 
             mUkupnaCijena += zaPlatiti;
 
@@ -218,8 +224,9 @@ namespace Blagajna
                 MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
             else {
-                String stringZaPrikaz = "Za platiti :" + ukupnoZaPlatiti + "\n" + "Primljeno: " + ukupnoPrimljeno + "\n"+
-                    "_________________\n"+ "VRATITI:" + zaVratiti;
+                zaVratiti = Math.Round(zaVratiti, 2);
+                String stringZaPrikaz = "Za platiti: " + ukupnoZaPlatiti + "\n" + "Primljeno: " + ukupnoPrimljeno + "\n"+
+                    "_________________\n"+ "VRATITI: " + zaVratiti;
                 MessageBox.Show(stringZaPrikaz, "Blagajna");
 
                 printBill(ukupnoZaPlatiti, ukupnoPrimljeno, zaVratiti);
@@ -231,7 +238,12 @@ namespace Blagajna
             var time = DateTime.Now;
             string formattedTime = time.ToString("dd.MM.yyyy hh:mm:ss");
             string formattedTimeForPath = time.ToString("ddMMyyyy_hh_mm_ss");
-            string path = "C:\\Users\\Erpa\\Desktop\\racuni\\racun"+ formattedTimeForPath + "_" + mBrojRacuna+".txt";
+            string folderPath = "C:\\Users\\Public\\Documents\\Racuni";
+
+            Directory.CreateDirectory(folderPath); ;
+
+            string path = folderPath + "\\racun"+ formattedTimeForPath + "_" + mBrojRacuna+".txt";
+
 
              using (StreamWriter writer = File.AppendText(path))
             {               
@@ -278,7 +290,7 @@ namespace Blagajna
             kolicinaTB.Text = "1";
             searchTB.Text = "";
             selectedTB.Text = "";
-            primljenoTB.Text = "";
+            primljenoTB.Text = "0";
             ukupnoLabel.Text = "0";
         }       
 }

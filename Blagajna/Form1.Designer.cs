@@ -84,6 +84,7 @@
             this.primljenoTB.Name = "primljenoTB";
             this.primljenoTB.Size = new System.Drawing.Size(86, 20);
             this.primljenoTB.TabIndex = 5;
+            this.primljenoTB.Text = "0";
             // 
             // label4
             // 
@@ -117,6 +118,7 @@
             this.proizvodiGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.proizvodiGV.Location = new System.Drawing.Point(44, 41);
             this.proizvodiGV.Name = "proizvodiGV";
+            this.proizvodiGV.ReadOnly = true;
             this.proizvodiGV.Size = new System.Drawing.Size(481, 268);
             this.proizvodiGV.TabIndex = 10;
             this.proizvodiGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.proizvodiGV_CellClick);

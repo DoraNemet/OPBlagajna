@@ -165,6 +165,12 @@ namespace Blagajna
                 }
             }
 
+            if (Int32.Parse(kolicinaTB.Text) < 0)
+            {
+                potrebnoPoljeLabel.Text = "*Kriva vrijednost";
+                return;
+            }
+
             potrebnoPoljeLabel.Text = "";
             Double kupljenaKolicina;
             kupljenaKolicina = Double.Parse(kolicinaTB.Text);
